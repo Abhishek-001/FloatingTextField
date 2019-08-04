@@ -9,7 +9,7 @@ while minimizing the additional space used to display this additional context.
 
 ## Usage via Interface Builder
 
-No need to download a whole cocoapod. Just download **FloatingTextField.swift** file and use in your project. 
+No need to download any cocoapod. Just download **FloatingTextField.swift** file and use in your project. 
 1. Change textfield class via Interface Builder, to FLoatingTextField.
 2. Set your custom highlighted colour in IB. 
 3. Set your placeholder text that floating label should show. 
