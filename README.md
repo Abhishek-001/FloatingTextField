@@ -6,3 +6,10 @@ while minimizing the additional space used to display this additional context.
 
 
 ![](images/working-display.gif)
+
+## Usage via Interface Builder
+
+
+![](images/usage-display.gif)
+
+
