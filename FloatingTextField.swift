@@ -16,16 +16,10 @@ enum TextFieldStyle {
 
 @IBDesignable class FloatingTextField: UITextField {
     
-    @IBInspectable var errorText: String?
+    @IBInspectable var highlightColour: UIColor? = .gray
     var noInputHighlightColor: UIColor? = .red
     let placeholderLabel = UILabel()
     let bottomLayer = CAShapeLayer()
-    
-    var defaultHighlight: UIColor? {
-        didSet {
-            self.bottomLayer.strokeColor = defaultHighlight!.cgColor
-        }
-    }
     
     lazy var strokeEndAnimation: CABasicAnimation = {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -52,6 +46,11 @@ enum TextFieldStyle {
     
     override func awakeFromNib() {
         
+        setupPlaceholderLabel()
+        animatePlaceHolderLabelDown()
+    }
+    
+    fileprivate func setupPlaceholderLabel() {
         addSubview(placeholderLabel)
         self.delegate = self
         
@@ -71,16 +70,17 @@ enum TextFieldStyle {
         self.placeholderLabel.font = self.font
         self.placeholderLabel.textColor = .lightGray
         self.borderStyle = .none
+        self.setBottomBorder(color: .lightGray)
         
-        animatePlaceHolderLabelDown()
     }
     
+    // MARK:- Use this function to set default colour of Floating label's text- Can be customized.
     func setStyle(style: TextFieldStyle) {
         layoutIfNeeded()
         
         switch style {
         case .green:
-            self.setBottomBorder(color: Constants.darkGreenFV)
+            self.setBottomBorder(color: #colorLiteral(red: 0.1093588177, green: 0.5, blue: 0.1868519905, alpha: 1))
             animatePlaceholderLabelUp()
             
         case .gray:
@@ -95,24 +95,6 @@ enum TextFieldStyle {
     }
     
     func showWrongInput() {
-        
-        //TODO:- ErrorText shows to hint user.
-        if false {
-            let errorLabel = UILabel()
-            errorLabel.font = self.font
-            errorLabel.minimumScaleFactor = 0.2
-            errorLabel.adjustsFontSizeToFitWidth = true
-            errorLabel.lineBreakMode = .byClipping
-            errorLabel.numberOfLines = 0
-            
-            errorLabel.text = errorText
-            addSubview(errorLabel)
-            errorLabel.frame = CGRect(x: 6,
-                                      y: self.bounds.maxY,
-                                      width: self.bounds.width,
-                                      height: 8 )
-            
-        }
         
         if noInputHighlightColor != nil {
             self.setBottomBorder(color: noInputHighlightColor!)
@@ -137,30 +119,22 @@ extension FloatingTextField : UITextFieldDelegate {
             print("Called from background thread")
             return
         }
-        
-        if defaultHighlight != nil {
-            self.setBottomBorder(color: defaultHighlight!)
-            animatePlaceholderLabelUp()
-        }
-        else {
-            self.setStyle(style: .green)
-        }
+    
+        self.setBottomBorder(color: highlightColour!)
+        animatePlaceholderLabelUp()
         
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         self.setStyle(style: .gray)
-        
         if textField.text == "" {
-            
             if noInputHighlightColor != nil {
                 self.setBottomBorder(color: noInputHighlightColor!)
             }
             else{
                 self.setBottomBorder(color: .red)
             }
-            
             animatePlaceHolderLabelDown()
         }
     }
@@ -208,13 +182,12 @@ extension FloatingTextField {
         
         let heightSmall = self.bounds.height * 0.5
         DispatchQueue.main.async {
-            
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
                 self.placeholderLabel.frame = CGRect(x: 0,
                                                      y: self.bounds.minY - heightSmall,
                                                      width: self.bounds.width,
                                                      height: heightSmall )
-                self.placeholderLabel.textColor = Constants.darkGreenFV
+                self.placeholderLabel.textColor =  self.highlightColour
             })
         }
     }
