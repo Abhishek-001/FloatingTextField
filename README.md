@@ -5,3 +5,4 @@ This design enables adding context to input fields that are visible at the time 
 while minimizing the additional space used to display this additional context. 
 
 
+![](working-display.gif)
