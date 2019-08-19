@@ -17,3 +17,8 @@ No need to download any cocoapod. Just download **FloatingTextField.swift** file
 ![](images/usage-display.gif)
 
 
+## Author
+Abhishek Rathi, work.abhirathi@gmail.com
+
+License
+FloatingTextField is available under the MIT license. See the LICENSE file for more info.
